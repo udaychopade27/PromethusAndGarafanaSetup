@@ -6,6 +6,7 @@ alerting:
   alertmanagers:
     - static_configs:
       - targets:
+        - 'alertmanager:9093'
 
 rule_files:
   - './rules/prometheus.rules.yml'
@@ -23,3 +24,25 @@ scrape_configs:
     scrape_interval: 5s
     static_configs:
       - targets: ['node-exporter:9100']
+
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]  # Choose the module to use
+    static_configs:
+      - targets:
+        - http://www.google.com
+        - http://localhost:5001
+        - http://prometheus.io
+        - http://localhost:3000  # Target to probe
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: instance
+        replacement: blackbox
+      - target_label: __address__
+        replacement: blackbox:9115  # Blackbox Exporter address
+  - job_name: 'blackbox_exporter'  # collect blackbox exporter's operational metrics.
+    static_configs:
+      - targets: ['blackbox:9115']

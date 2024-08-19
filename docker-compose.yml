@@ -39,3 +39,25 @@ services:
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     expose:
       - 9100
+ 
+        #  AlertManager:
+        # image: prom/alertmanager
+        # container_name: alertmanager
+        # ports:
+        # - 9093:9093
+        # restart: unless-stopped
+        # volumes:
+        # - "./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+        # command:
+        # - "--config.file=/etc/alertmanager/alertmanager.yml"
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter
+    container_name: blackbox
+    restart: unless-stopped
+    ports:
+      - 9115:9115
+    volumes:
+      - ./blackbox/monitor_website.yml:/config/monitor_website.yml
+    command:
+      - '--config.file=/config/monitor_website.yml'
