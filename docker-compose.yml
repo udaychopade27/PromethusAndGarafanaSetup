@@ -22,7 +22,6 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
-      - ./grafanadata:/var/lib/grafana
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -40,16 +39,16 @@ services:
     expose:
       - 9100
  
-        #  AlertManager:
-        # image: prom/alertmanager
-        # container_name: alertmanager
-        # ports:
-        # - 9093:9093
-        # restart: unless-stopped
-        # volumes:
-        # - "./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
-        # command:
-        # - "--config.file=/etc/alertmanager/alertmanager.yml"
+  AlertManager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    ports:
+      - 9093:9093
+    restart: unless-stopped
+    volumes:
+      - "./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
 
   blackbox-exporter:
     image: prom/blackbox-exporter
@@ -61,3 +60,16 @@ services:
       - ./blackbox/monitor_website.yml:/config/monitor_website.yml
     command:
       - '--config.file=/config/monitor_website.yml'
+
+  cadvisor:
+     image: gcr.io/cadvisor/cadvisor:latest
+     container_name: cadvisor
+     restart: unless-stopped
+     ports:
+      - 8081:8080
+     volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
