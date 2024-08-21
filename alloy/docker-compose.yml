@@ -1,6 +1,5 @@
 version: '3'
 services:
-  
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -11,7 +10,7 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yml'    
     ports:
       - 9090:9090
-
+      
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -27,19 +26,17 @@ services:
   loki:
     image: grafana/loki
     container_name: loki
-    restart: unless-stopped
     ports:
       - 3100:3100
     volumes:
-      - ./loki-config.yaml:/mnt/config/loki-config.yaml
+      - ../loki/loki-config.yaml:/mnt/config/loki-config.yaml
     command: --config.file=/mnt/config/loki-config.yaml
-  
-  promtail:
-    image: grafana/promtail
-    container_name: promtail
-    restart: unless-stopped
+ 
+  alloy:
+    image: grafana/alloy
+    container_name: alloy
+    ports:
+      - 12345:12345
     volumes:
-      - ./promtail-config.yaml:/mnt/config/promtail-config.yaml
-      - /var/log:/var/log:ro
-      - /var/log/nginx:/var/log/nginx:ro
-    command: --config.file=/mnt/config/promtail-config.yaml
+      - ./alloy-config.alloy:/etc/alloy/config.alloy
+    command: run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy
