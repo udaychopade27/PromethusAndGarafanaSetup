@@ -1,0 +1,16 @@
+global:
+ resolve_timeout: 1m
+
+route:
+ receiver: 'email-notifications'
+
+receivers:
+- name: 'email-notifications'
+  email_configs:
+  - to: 'uchopade27@gmail.com'
+    from: 'udaychopade27@gmail.com'
+    smarthost: 'smtp.gmail.com:587'
+    auth_username: 'udaychopade27@gmail.com'
+    auth_identity: 'udaychopade27@gmail.com'
+    auth_password: 'rcrizdbxqktisovd'
+    send_resolved: true

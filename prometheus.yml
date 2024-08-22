@@ -36,10 +36,9 @@ scrape_configs:
       module: [http_2xx]  # Choose the module to use
     static_configs:
       - targets:
-        - http://www.google.com
-        - http://localhost:5001
-        - http://prometheus.io
-        - http://localhost:3000  # Target to probe
+        - https://www.google.com
+        - https://www.github.com
+        - https://prometheus.io # Target to probe
 
     relabel_configs:
       - source_labels: [__address__]
