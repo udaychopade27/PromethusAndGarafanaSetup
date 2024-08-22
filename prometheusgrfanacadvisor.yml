@@ -7,7 +7,8 @@ services:
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
       - "./rules/:/etc/prometheus/rules/"
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'    
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - prometheus-data:/prometheus    
     ports:
       - 9090:9090
       
@@ -22,6 +23,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ./grafana:/etc/grafana/provisioning/datasources
+      - grafana_data:/var/lib/grafana
 
   cadvisor:
      image: gcr.io/cadvisor/cadvisor:latest
@@ -35,3 +37,7 @@ services:
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
+
+volumes:
+  prometheus-data:
+  grafana_data:

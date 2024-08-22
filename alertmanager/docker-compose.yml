@@ -7,7 +7,8 @@ services:
       - "../prometheus.yml:/etc/prometheus/prometheus.yml"
       - "../rules/:/etc/prometheus/rules/"
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'    
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - prometheus-data:/prometheus  
     ports:
       - 9090:9090
       
@@ -22,6 +23,7 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ../grafana:/etc/grafana/provisioning/datasources
+      - grafana_data:/var/lib/grafana
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -49,3 +51,7 @@ services:
       - "./email_alert.yml:/etc/alertmanager/email_alert.yml"
     command:
       - "--config.file=/etc/alertmanager/email_alert.yml"
+
+volumes:
+  prometheus-data:
+  grafana_data:
